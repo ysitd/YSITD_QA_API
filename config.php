@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'token'       => 'Token Here',
-    'db_host'     => 'Host IP Here',
-    'db_user'     => 'DB Username Here',
-    'db_password' => 'DB Password Here',
-    'db_name'     => 'DB Name Here',
-    'questions'   => '0'
+    'token'       => 'Token Here',       //驗證用
+    'db_host'     => 'Host IP Here',     //資料庫IP
+    'db_user'     => 'DB Username Here', //資料庫使用者
+    'db_password' => 'DB Password Here', //資料庫密碼
+    'db_name'     => 'DB Name Here',     //資料庫名稱
+    'questions'   => '0'                 //題目數量
 ];
