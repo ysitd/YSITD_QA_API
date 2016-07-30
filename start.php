@@ -7,19 +7,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 //POST DATA
-$tguser = intval($_POST["user"]);
+$tguser = intval($_POST["user"]); //Telegram User ID
 $token = $_POST["token"];
 
 //Variables
-$config = require_once __DIR__ . '/db.php';
-$hosttoken = $config['token'];
-$question = $config['questions'];
-$a = '0' + '0';
-$b = '1' + '0';
-$c = '1' + '1';
+$config     = require_once __DIR__ . '/db.php';
+$hosttoken  = $config['token'];
+$question   = $config['questions'];
+$PDONumber0 = (INT)"0";
+$PDONumber1 = (INT)"1";
+$PDONumber2 = (INT)"2";
 
 //database
 $db = $config['db'];
+
+//Check POST Data
+if ($token = null or $tguser =null){
+    echo("Not correct POST Data")
+    die;
+}
 
 //check token
 if (!$token = $hosttoken) {
@@ -39,9 +45,9 @@ $qaarray = array_combine(range(1, $question), range(1, $question));
 shuffle($qaarray);
 $encodearray=JSON_Encode($qaarray);
 $userqalist = $db->prepare("INSERT IGNORE INTO `qalist` (user,list,now,next) VALUES (:user,:array,:c,:n)");
-
 $userqalist->bindParam(':user', $tguser, PDO::PARAM_INT);
 $userqalist->bindParam(':array', $encodearray, PDO::PARAM_STR);
 $userqalist->bindParam(':c',$b, PDO::PARAM_INT);
 $userqalist->bindParam(':n',$c, PDO::PARAM_INT);
 $userqalist->execute();
+?>

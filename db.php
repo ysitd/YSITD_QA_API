@@ -8,4 +8,3 @@ function init() {
 }
 
 return init();
-
