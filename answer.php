@@ -54,15 +54,15 @@ echo JSON_Encode($QuesrionList);
 
 
 if ($correct == 0){
-    $updateuser = $GLOBALS['DB']->UPDATE('user', 'wronganswer' => wronganswer + 1]);
-    $updatenow  = $GLOBALS['DB']->UPDATE('qalist', 'now' => now + 1]);
-    $updatenext = $GLOBALS['DB']->UPDATE('qalist', 'next' => next + 1]);
+    $updateuser = $GLOBALS['DB']->update('user', 'wronganswer' => $GLOBALS['DB']->inc(1)]);
+    $updatenow  = $GLOBALS['DB']->update('qalist', 'now' => $GLOBALS['DB']->inc(1)]);
+    $updatenext = $GLOBALS['DB']->update('qalist', 'next' => $GLOBALS['DB']->inc(1)]);
 }
 
 if ($correct == 1){
-    $updateuser = $GLOBALS['DB']->UPDATE('user', 'rightanswer' => rightanswer + 1]);
-    $updatenow  = $GLOBALS['DB']->UPDATE('qalist', 'now' => now + 1]);
-    $updatenext = $GLOBALS['DB']->UPDATE('qalist', 'next' => next + 1]);
+    $updateuser = $GLOBALS['DB']->update('user', 'rightanswer' => $GLOBALS['DB']->inc(1)]);
+    $updatenow  = $GLOBALS['DB']->update('qalist', 'now' => $GLOBALS['DB']->inc(1)]);
+    $updatenext = $GLOBALS['DB']->update('qalist', 'next' => $GLOBALS['DB']->inc(1)]);
 }
 
 
