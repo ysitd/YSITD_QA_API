@@ -28,17 +28,7 @@ if ($token != $hosttoken ){
 }
 
 //Database Connection
-$db = new PDO('mysql:host='.$db_host.';dbname='.$db_name.';charset=utf8', $db_user, $db_password);
-
-//Read qalist table  to get user's correct question
-$qalist                    = $db->prepare("SELECT user, list, now, next FROM qalist WHERE user = :user");
-$qalist->bindParam(':user',$tguser, PDO::PARAM_INT);
-$qalist->execute();
-
-$Object                    = $qalist->fetchObject(); //get data
-$UserCorrectQuestionNumber = $Object->now - 1 ;
-$QuestionQueue             = JSON_Decode($Object->list);
-$qnumber                   = $QuestionQueue[$UserCorrectQuestionNumber] + 0;
+$GLOBALS['DB'] = new MysqliDb ($db_host, $db_user, $db_password, $db_name);
 
 //if no more question
 if ($userquestion == $config[questions]){
@@ -50,38 +40,30 @@ if ($qnumber != $QuestionID){
     die("question_id_not_correct");
 }
 
+
+$QuesrionQueueList = $GLOBALS['DB']->where('qalist', $tguser)
+                                   ->get('user', ['list', 'now']);
+$UserQuestionID    = $QuesrionQueueList->now;
+$UserQuestionQueue = JSON_Decode($QuesrionQueueList->list);
+$QuestionID        = $UserQuestionQueue[$UserQuestionID] + 0;
+$QuesrionList = $GLOBALS['DB']->where('question', $QuestionID)
+                                   ->get(['id', 'question', 'author','answers']);
+$TempArray    = JSON_Decode($QuesrionList->answers);
+$QuesrionList->answers = $TempArray;
+echo JSON_Encode($QuesrionList);
+
+
 if ($correct == 0){
-    $updateuser = $db->prepare("UPDATE user SET wronganswer = wronganswer + :1 WHERE user=:user");
-    $updateuser->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updateuser->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updateuser->execute();
-
-    $updatenow = $db->prepare("UPDATE qalist SET now = now + :1 WHERE user=:user");
-    $updatenow->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenow->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updatenow->execute();
-
-    $updatenext = $db->prepare("UPDATE qalist SET next = next + :1 WHERE user=:user");
-    $updatenext->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenext->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updatenext->execute();
+    $updateuser = $GLOBALS['DB']->UPDATE('user', 'wronganswer' => wronganswer + 1]);
+    $updatenow  = $GLOBALS['DB']->UPDATE('qalist', 'now' => now + 1]);
+    $updatenext = $GLOBALS['DB']->UPDATE('qalist', 'next' => next + 1]);
 }
 
 if ($correct == 1){
-    $updateuser = $db->prepare("UPDATE user SET rightanswer = rightanswer + :1 WHERE user=:user");
-    $updateuser->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updateuser->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updateuser->execute();
-
-    $updatenow = $db->prepare("UPDATE qalist SET now = now + :1 WHERE user=:user");
-    $updatenow->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenow->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updatenow->execute();
-
-    $updatenext = $db->prepare("UPDATE qalist SET next = next + :1 WHERE user=:user");
-    $updatenext->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenext->bindParam(':user',$tguser, PDO::PARAM_INT);
-    $updatenext->execute();
+    $updateuser = $GLOBALS['DB']->UPDATE('user', 'rightanswer' => rightanswer + 1]);
+    $updatenow  = $GLOBALS['DB']->UPDATE('qalist', 'now' => now + 1]);
+    $updatenext = $GLOBALS['DB']->UPDATE('qalist', 'next' => next + 1]);
 }
+
 
 ?>

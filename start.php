@@ -11,15 +11,19 @@ $tguser = intval($_POST["user"]); //Telegram User ID
 $token = $_POST["token"];
 
 //Variables
-$config     = require_once __DIR__ . '/db.php';
-$hosttoken  = $config['token'];
-$question   = $config['questions'];
-$PDONumber0 = (INT)"0";
-$PDONumber1 = (INT)"1";
-$PDONumber2 = (INT)"2";
+$config      = include('config.php');
+$hosttoken   = $config['token'];
+$question    = $config['questions'];
+$PDONumber0  = (INT)"0";
+$PDONumber1  = (INT)"1";
+$PDONumber2  = (INT)"2";
+$db_host     = $config['db_host'];
+$db_name     = $config['db_name'];
+$db_user     = $config['db_user'];
+$db_password = $config['db_password'];
 
 //database
-$db = $config['db'];
+$GLOBALS['DB'] = new MysqliDb ($db_host, $db_user, $db_password, $db_name);
 
 //Check POST Data
 if ($token = null or $tguser =null){
@@ -34,20 +38,16 @@ if (!$token = $hosttoken) {
 }
 
 //INSERT user Table
-$userInsert = $db->prepare("INSERT IGNORE INTO `user` (user,rightanswer,wronganswer) VALUES (:user,:ra,:wa)");
-$userInsert->bindParam(':user', $tguser, \PDO::PARAM_INT);
-$userInsert->bindParam(':ra',$a, \PDO::PARAM_INT);
-$userInsert->bindParam(':wa',$a, \PDO::PARAM_INT);
-$userInsert->execute();
+$userInsert = $GLOBALS['DB']->insert('user', ['user'        => $tguser,
+                                              'rightanswer' => $a,
+                                              'wronganswer' => $a]);
 
 //INSERT qalist
 $qaarray = array_combine(range(1, $question), range(1, $question));
 shuffle($qaarray);
 $encodearray=JSON_Encode($qaarray);
-$userqalist = $db->prepare("INSERT IGNORE INTO `qalist` (user,list,now,next) VALUES (:user,:array,:c,:n)");
-$userqalist->bindParam(':user', $tguser, PDO::PARAM_INT);
-$userqalist->bindParam(':array', $encodearray, PDO::PARAM_STR);
-$userqalist->bindParam(':c',$b, PDO::PARAM_INT);
-$userqalist->bindParam(':n',$c, PDO::PARAM_INT);
-$userqalist->execute();
+$userqalist = $GLOBALS['DB']->insert('qalist', ['user'  => $tguser,
+                                                'list'  => $encodearray,
+                                                'now'   => "1",
+                                                'next'  => "2"]);
 ?>
