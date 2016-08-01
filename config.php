@@ -1,5 +1,5 @@
 <?php
-
+require_once ('MysqliDb.php');
 return [
     'token'       => 'Token Here',       //驗證用
     'db_host'     => 'Host IP Here',     //資料庫IP

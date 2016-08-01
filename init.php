@@ -1,44 +1,31 @@
 <?php
 
 //Variables
-$config = require_once __DIR__ . '/db.php';
+$config= include('config.php');
 //Database
-$db = $config['db'];
+$GLOBALS['DB'] = new MysqliDb ($db_host, $db_user, $db_password, $db_name);
 
 //add table user for recode user's info (id,rightanswe,wronganswer)
-$userTableCreate = "CREATE TABLE IF NOT EXISTS `user` (
-             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-             user INT NOT NULL,
-             rightanswer INT NOT NULL,
-             wronganswer INT NOT NULL,
-             createdate TIMESTAMP
-             )";
 
-$db->exec($userTableCreate);
+$GLOBALS['DB']->column('id')          ->INT()->AUTO_INCREMENT()->UNIQUE()
+              ->column('user')        ->INT()
+              ->column('rightanswer') ->INT()
+              ->column('wronganswer') ->INT()
+              ->column('createdate')  ->INT()->TIMESTAMP()
+              -create('user');
 
 //create question for record data
-$questionTableCreate = "CREATE TABLE IF NOT EXISTS `question` (
-             id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-             question TEXT NOT NULL,
-             author TEXT NOT NULL,
-             answers TEXT NOT NULL
-             )";
-
-$db->exec($questionTableCreate);
+$GLOBALS['DB']->column('id')      ->INT()->AUTO_INCREMENT()->UNIQUE()
+              ->column('question')->TEXT()
+              ->column('author')  ->TEXT()
+              ->column('answers') ->TEXT()
+              -create('question');
 
 //create qalist for recode user question queue list
-$qalist = "CREATE TABLE IF NOT EXISTS `qalist` (
-           user INT NOT NULL,
-           list TEXT NOT NULL,
-           now INT NOT NULL,
-           next INT NOT NULL
-           )";
-$db->exec($qalist);
-
-//setup uuid for get data
-$setupuuid="ALTER TABLE user ADD UNIQUE (user);
-            ALTER TABLE question ADD UNIQUE (id);
-            ALTER TABLE qalist ADD UNIQUE (user);";
-$db->exec($setupuuid);
+$GLOBALS['DB']->column('user')->INT()->UNIQUE()
+              ->column('list')->TEXT()
+              ->column('now') ->INT()
+              ->column('next')->INT()
+              -create('qalist');
 
 ?>
