@@ -12,7 +12,7 @@ $db_user = $config['db_user'];
 $db_password = $config['db_password'];
 
 //Database
-$GLOBALS['DB'] = new MysqliDb ($db_host, $db_user, $db_password, $db_name);
+$db = new PDO('mysql:host='.$db_host.';dbname='.$db_name.';charset=utf8', $db_user, $db_password);
 
 //Check POST Data
 if ($token = null or $tguser =null){
@@ -27,8 +27,10 @@ if($token != $hosttoken){
 }
 
 //Get User info
-$userinfo = $GLOBALS['DB']->where('user', $tguser)
-                          ->get(['rightanswer', 'wronganswer']);
-echo JSON_Encode($userinfo);
+$UserInfo = $db->prepare("SELECT rightanswer, wronganswer FROM user WHERE user = :user");
+$UserInfo->bindParam(':user',$tguser, PDO::PARAM_INT);
+$UserInfo->execute();
+$Object = $UserInfo->fetchObject();
+echo JSON_Encode($Object);
 
 ?>
