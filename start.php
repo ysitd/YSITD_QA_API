@@ -23,21 +23,19 @@ $db = $config['db'];
 
 //Check POST Data
 if ($token = null or $tguser =null){
-    echo("Not correct POST Data")
-    die;
+    die("NOT_CORRECT_POST_DATA");
 }
 
 //check token
 if (!$token = $hosttoken) {
-    echo("Auth Fail");
-    die("Auth Fail");
+    die("AUTH_FAILED");
 }
 
 //INSERT user Table
 $userInsert = $db->prepare("INSERT IGNORE INTO `user` (user,rightanswer,wronganswer) VALUES (:user,:ra,:wa)");
-$userInsert->bindParam(':user', $tguser, \PDO::PARAM_INT);
-$userInsert->bindParam(':ra',$a, \PDO::PARAM_INT);
-$userInsert->bindParam(':wa',$a, \PDO::PARAM_INT);
+$userInsert->bindParam(':user',$tguser,PDO::PARAM_INT);
+$userInsert->bindParam(':ra',$a,PDO::PARAM_INT);
+$userInsert->bindParam(':wa',$a,PDO::PARAM_INT);
 $userInsert->execute();
 
 //INSERT qalist
@@ -45,9 +43,9 @@ $qaarray = array_combine(range(1, $question), range(1, $question));
 shuffle($qaarray);
 $encodearray=JSON_Encode($qaarray);
 $userqalist = $db->prepare("INSERT IGNORE INTO `qalist` (user,list,now,next) VALUES (:user,:array,:c,:n)");
-$userqalist->bindParam(':user', $tguser, PDO::PARAM_INT);
-$userqalist->bindParam(':array', $encodearray, PDO::PARAM_STR);
-$userqalist->bindParam(':c',$b, PDO::PARAM_INT);
-$userqalist->bindParam(':n',$c, PDO::PARAM_INT);
+$userqalist->bindParam(':user',$tguser,PDO::PARAM_INT);
+$userqalist->bindParam(':array',$encodearray,PDO::PARAM_STR);
+$userqalist->bindParam(':c',$b,PDO::PARAM_INT);
+$userqalist->bindParam(':n',$c,PDO::PARAM_INT);
 $userqalist->execute();
 ?>

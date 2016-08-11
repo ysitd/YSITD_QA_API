@@ -23,8 +23,7 @@ if ($QuestionID = null or $correct = null or $token = null or $tguser =null){
 
 //Check token
 if ($token != $hosttoken ){
- echo("Auth Fail");
- die;
+ die("AUTH_FAILED");
 }
 
 //Database Connection
@@ -32,7 +31,7 @@ $db = new PDO('mysql:host='.$db_host.';dbname='.$db_name.';charset=utf8', $db_us
 
 //Read qalist table  to get user's correct question
 $qalist                    = $db->prepare("SELECT user, list, now, next FROM qalist WHERE user = :user");
-$qalist->bindParam(':user',$tguser, PDO::PARAM_INT);
+$qalist->bindParam(':user',$tguser,PDO::PARAM_INT);
 $qalist->execute();
 
 $Object                    = $qalist->fetchObject(); //get data
@@ -52,35 +51,35 @@ if ($qnumber != $QuestionID){
 
 if ($correct == 0){
     $updateuser = $db->prepare("UPDATE user SET wronganswer = wronganswer + :1 WHERE user=:user");
-    $updateuser->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updateuser->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updateuser->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updateuser->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updateuser->execute();
 
     $updatenow = $db->prepare("UPDATE qalist SET now = now + :1 WHERE user=:user");
-    $updatenow->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenow->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updatenow->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updatenow->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updatenow->execute();
 
     $updatenext = $db->prepare("UPDATE qalist SET next = next + :1 WHERE user=:user");
-    $updatenext->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenext->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updatenext->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updatenext->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updatenext->execute();
 }
 
 if ($correct == 1){
     $updateuser = $db->prepare("UPDATE user SET rightanswer = rightanswer + :1 WHERE user=:user");
-    $updateuser->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updateuser->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updateuser->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updateuser->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updateuser->execute();
 
     $updatenow = $db->prepare("UPDATE qalist SET now = now + :1 WHERE user=:user");
-    $updatenow->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenow->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updatenow->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updatenow->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updatenow->execute();
 
     $updatenext = $db->prepare("UPDATE qalist SET next = next + :1 WHERE user=:user");
-    $updatenext->bindParam(':1',$PDONumber, PDO::PARAM_INT);
-    $updatenext->bindParam(':user',$tguser, PDO::PARAM_INT);
+    $updatenext->bindParam(':1',$PDONumber,PDO::PARAM_INT);
+    $updatenext->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updatenext->execute();
 }
 
