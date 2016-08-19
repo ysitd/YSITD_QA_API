@@ -40,5 +40,3 @@ $setupuuid="ALTER TABLE user ADD UNIQUE (user);
             ALTER TABLE question ADD UNIQUE (id);
             ALTER TABLE qalist ADD UNIQUE (user);";
 $db->exec($setupuuid);
-
-?>

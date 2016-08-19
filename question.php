@@ -40,4 +40,3 @@ $Object2      = $QuestionList->fetchObject();
 $TempArray    = JSON_Decode($Object2->answers);
 $Object2->answers = $TempArray;
 echo JSON_Encode($Object2);
-?>

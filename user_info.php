@@ -30,5 +30,3 @@ $UserInfo->bindParam(':user',$tguser,PDO::PARAM_INT);
 $UserInfo->execute();
 $Object = $UserInfo->fetchObject();
 echo JSON_Encode($Object);
-
-?>

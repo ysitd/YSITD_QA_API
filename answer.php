@@ -82,5 +82,3 @@ if ($correct == 1){
     $updatenext->bindParam(':user',$tguser,PDO::PARAM_INT);
     $updatenext->execute();
 }
-
-?>
